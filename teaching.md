@@ -1,0 +1,67 @@
+---
+layout: page
+title: Computer vision
+description: 
+---
+
+
+
+
+
+
+#### RCCN ; Featurs Matters !
+
+
+- [Paper](https://www)
+
+
+Detecting objects is a still a challenge in the field of computer vision, where the task is to teach machines to identify and locate different objects within images or videos.
+
+Object detection needs to handle two objectives: identifying the presence of an object within an image or video and precisely determining the object’s position within the frame.
+
+Within this post, I provide a summary of Ross Girshick’s paper, “Rich feature hierarchies for precise object detection and semantic segmentation” [1].
+
+Before [1], one of the earliest approach employed for object detection is sliding windows. It systematically scan an image with a small rectangular window or “patch,” moving it across the image’s entire surface. This method aims to identify and localize objects of interest within the image by analyzing the content within each window as it shown in Figure bellow:
+
+
+
+It’s important to highlight that feature extraction must happen within each patch at every stage. Subsequently, the network employs these extracted features to determine the presence of an object in the image.
+
+The sliding window approach has several drawbacks, including computational inefficiency due to the analysis of overlapping windows, potential redundancy in processing similar information, dependence on fixed window sizes that may not adapt to varying object sizes, challenges in managing scale variability, limitations in capturing contextual information, difficulties in detecting closely spaced objects.
+
+So in [1], they addressed these issues with “recognition using regions”. This paradigm analyses different regions or patches of the image rather than the entire image.
+
+RCNN (Region-based Convolutional Neural Network) is an object detection approach that identifies potential object regions in an image. It extracts features from these regions using a CNN, allowing more efficient and accurate object classification and localization than analyzing the entire image.
+
+
+
+So the model take an image as the input and extract 200K region proposals (frames). For every region proposal, features are extracted using a Convolutional Neural Network (CNN). This involves passing the region through the CNN, which transforms the visual information into representative features.
+
+The extracted features from each region proposal are then used to classify the region into different object classes. Class-specific linear Support Vector Machines (SVMs) are employed for this task. Each class has its own SVM trained to distinguish that class from others based on the extracted features.
+
+As mentioned, RCNN consists of three distinct parts. In the upcoming section, we will provide a detailed exploration of each step.
+
+## Region proposals:
+
+
+In the RCNN framework, the Selective Search algorithm generates diverse region proposals within an image.
+
+Selective Search is an algorithm for object recognition proposed in 2012 by [2]. The algorithm operates by combining smaller image segments into larger regions based on similarity in colour, texture, or other visual attributes. This process helps group parts of the image that share common characteristics, which can indicate objects. The algorithm then progressively merges these regions to generate a hierarchy of region proposals at multiple scales. It starts by treating each pixel or small region as an individual segment. Then, it progressively integrates these segments into larger and more complex regions based on similarity criteria. The merging continues until a set of candidate region proposals at different scales and levels of detail is obtained.
+
+The method is detailed in Algorithm 1 as follows:
+
+So First the algorithm take an input image and define the initial regions. In the next step, it compute the similarity between all neighbouring regions s(ri , rj). Two regions that share the highest similarity are combined, similarities are computed again between the resultant region and its adjacent counterparts.
+
+The hierarchical grouping algorithm applied to a variety of colour spaces with
+a range of invariance properties such as RGB, grey scale, and HSV.
+
+For example, for every region, we generate one-dimensional color histograms for each color channel using 25 bins. Consequently, this results in a color histogram Ci = {ci1, …, cni} for each region ri, where the dimensionality is n = 75 when considering three color channels.
+
+The measurement of similarity is accomplished through histogram intersection:
+
+--
+# Refrences 
+
+[1] Girshick, R., Donahue, J., Darrell, T., & Malik, J. (2014). Rich feature hierarchies for accurate object detection and semantic segmentation. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 580-587).
+
+[2] Uijlings, J. R., Van De Sande, K. E., Gevers, T., & Smeulders, A. W. (2013). Selective search for object recognition. International journal of computer vision, 104, 154-171.
